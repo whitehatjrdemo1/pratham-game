@@ -19,10 +19,10 @@ class Player {
     });
   }
 
-  getCarsAtEnd() {
-    var carsAtEndRef = database.ref("carsAtEnd");
-    carsAtEndRef.on("value", (data) => {
-      carsAtEnd = data.val();
+  getPlayerAtEnd() {
+    var playerAtEndRef = database.ref("playerAtEnd");
+    playerAtEndRef.on("value", (data) => {
+      playerAtEnd = data.val();
     });
   }
 
@@ -32,15 +32,15 @@ class Player {
     });
   }
 
-  static updateCarsAtEnd(count) {
+  static updatePlayerAtEnd(count) {
     database.ref("/").update({
-      carsAtEnd: count,
+      playerAtEnd: count,
     });
   }
 
   update() {
     var playerIndex = "players/player" + this.index;
-    database.ref(playerIndex).set({
+    database.ref(playerIndex).update({
       name: this.name,
       y: this.y,
       x: this.x,

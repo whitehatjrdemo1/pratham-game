@@ -8,8 +8,8 @@ class Game {
     });
   }
 
-  update(state) {
-    database.ref("/").update({
+  async update(state) {
+    await database.ref("/").update({
       gameState: state,
     });
   }
@@ -41,7 +41,7 @@ class Game {
     form.hide();
 
     Player.getPlayerInfo();
-
+    player.getPlayerAtEnd();
     if (allPlayers !== undefined) {
       background(rgb(198, 135, 103));
 
@@ -65,8 +65,10 @@ class Game {
         y = allPlayers[plr].y;
         playerArray[index - 1].x = x;
         playerArray[index - 1].y = y;
+
         stroke(10);
         fill("red");
+        //show helth and score
         text(allPlayers[plr].health, x, y - 200);
         text(allPlayers[plr].score, x, y - 250);
         if (index === player.index) {
@@ -74,6 +76,8 @@ class Game {
           fill("red");
           ellipse(x, y, 100, 100);
 
+          player.health = allPlayers[plr].health;
+          console.log(player.health + "," + allPlayers[plr].health);
           camera.position.x = displayWidth / 2;
           camera.position.y = playerArray[index - 1].y;
           //destroy weapon if out of screen
@@ -109,6 +113,10 @@ class Game {
             weapons[player.index - 1] = null;
             console.log("destroy weapon after hit");
             player.updateEnemyHealth(index, health);
+            // if (health <= 0) {
+            //   this.getState();
+            // }
+            console.log("update" + health);
             player.state = "ready";
             player.weaponActive = false;
             player.update();
@@ -122,7 +130,7 @@ class Game {
         if (weapons[index - 1] && !allPlayers[plr].weaponActive) {
           weapons[index - 1].body.destroy();
           weapons[index - 1] = null;
-          player.state = "ready";
+          // player.state = "ready";
         }
 
         //createWeapons
@@ -212,61 +220,27 @@ class Game {
 
     this.chooseWeapon();
 
+    if (player.health <= 0) {
+      // gameState = 2;
+      this.update(2);
+      console.log(gameState);
+      Player.updatePlayerAtEnd(player.index);
+      console.log("losing Player" + player.index);
+    }
+
     drawSprites();
   }
 
   end() {
     console.log("Game Ended");
-    console.log(player.rank);
-
-    if (allPlayers !== undefined) {
-      background(rgb(198, 135, 103));
-      // image(track, 0,-displayHeight*4,displayWidth, displayHeight*5);
-
-      //var display_position = 100;
-
-      //index of the array
-      var index = 0;
-
-      //x and y position of the playerArray
-      var x = 175;
-      var y;
-
-      for (var plr in allPlayers) {
-        //add 1 to the index for every loop
-
-        index = index + 1;
-
-        //position the playerArray a little away from each other in x direction
-        x = x + 200;
-        //use data form the database to display the playerArray in y direction
-        y = displayHeight - allPlayers[plr].distance;
-        playerArray[index - 1].x = x;
-        playerArray[index - 1].y = y;
-
-        var element = createElement("h4");
-        if (allPlayers[plr].rank != 0) {
-          element.position(displayWidth / 2, allPlayers[plr].rank * 40);
-          element.html(allPlayers[plr].name + ":" + allPlayers[plr].rank);
-        }
-
-        if (index === player.index) {
-          element.style("color", "red");
-          stroke(10);
-          fill("red");
-          ellipse(x, y, 100, 100);
-          camera.position.x = displayWidth / 2;
-          camera.position.y = playerArray[index - 1].y;
-        } else {
-          element.style("color", "black");
-        }
-
-        //textSize(15);
-        //text(allPlayers[plr].name + ": " + allPlayers[plr].distance, 120,display_position)
-      }
+    //background(0);
+    if (playerAtEnd == 1) {
+      background(bg2Img);
+    } else if (playerAtEnd == 2) {
+      background(bg1Img);
     }
 
-    drawSprites();
+    // var backgroundimg = loadImage();
   }
   chooseWeapon() {
     if (player.state === "ready") {

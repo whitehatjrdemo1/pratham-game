@@ -42,7 +42,7 @@ class Form {
       database.ref("/").update({
         gameState: 0,
         playerCount: 0,
-        carsAtEnd: 0,
+        playerAtEnd: 0,
       });
     });
   }

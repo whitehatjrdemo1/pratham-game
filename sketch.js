@@ -2,7 +2,7 @@ var canvas;
 
 var playState = "ready";
 var playerArray = [];
-var carsAtEnd = 0;
+var  playerAtEnd= 0;
 var gameState = 0;
 var playerCount;
 var allPlayers;
@@ -41,8 +41,9 @@ var player2,
 function preload() {
   // Loading Images for background and winner
 
-  bgImg = loadImage("bg_images/bg.jpg");
+  bgImg = loadImage("bg_images/bg.jpg"); 
   bg1Img = loadImage("bg_images/bg1.jpg");
+ 
   bg2Img = loadImage("bg_images/bg2.jpg");
   bgImg = loadImage("bg_images/bg.jpg");
   winnerImg = loadImage("bg_images/winner.png");
@@ -71,7 +72,7 @@ function setup() {
 }
 
 function draw() {
-  if (playerCount === 2) {
+  if (playerCount === 2&&gameState==0) {
     game.update(1);
   }
   if (gameState === 1) {
